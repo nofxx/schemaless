@@ -8,7 +8,7 @@ describe 'Schemaless' do
   end
 
   it 'should get all models`s fields' do
-    expect(Schemaless.schema['Bike'][:table]).to eq('bikes')
+    expect(Schemaless.schema['Bike'][:model]).to eq(Bike)
   end
 
   it 'should get all models`s fields' do
@@ -43,4 +43,11 @@ describe 'Schemaless' do
 
   end
 
+  describe 'Field creation' do
+    it 'should create cc on bikes' do
+      Schemaless.work
+      expect { Bike.create!(name: "Gina", cc: 600) }.to_not raise_error
+      expect(Bike.count).to eq(1)
+    end
+  end
 end

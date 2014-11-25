@@ -5,7 +5,7 @@ namespace :db do
 
   desc "Updates the database!"
   task :up do
-    Schemaless.work_on(Rails.application)
+    Schemaless.work
   end
 
 end

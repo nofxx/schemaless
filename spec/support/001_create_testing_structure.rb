@@ -19,7 +19,7 @@ class CreateTestingStructure < ActiveRecord::Migration
     end
     create_table :bikes do |t|
       t.string :name, null: false
-      t.integer :cylinders, null: false
+      t.integer :cylinders
     end
     create_table :places do |t|
       t.string :name, null: false

@@ -8,5 +8,6 @@ pkg
 .bundle
 Gemfile.lock
 
+tmp/*
 *.sqlite3
 spec/dummy/log/*

@@ -1,3 +1,6 @@
+#
+# Schemaless Trouble to Worry!
+#
 module Schemaless
   autoload :ActiveRecord, 'schemaless/active_record'
 
@@ -43,7 +46,7 @@ module Schemaless
           attributes.merge!(k => v.type)
         end
         a.merge(e.to_s => {
-                  table: e.table_name,
+                  model: e,
                   attributes: attributes,
                   schemaless: e.schemaless_fields
                 })
@@ -57,8 +60,11 @@ module Schemaless
         attrs, fields = data[:attributes], data[:schemaless]
         removed = attrs.select { |n, _t| !fields.keys.include?(n) }
         added = fields.select { |n, _t| !attrs.keys.include?(n) }
-        add_fields(data[:table], added)
-        del_fields(data[:table], removed)
+        add_fields(data[:model].table_name, added)
+        del_fields(data[:model].table_name, removed)
+        p data
+        data[:model].reset_column_information
+
       end
     end
   end
