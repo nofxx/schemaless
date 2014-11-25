@@ -1,0 +1,27 @@
+pt:
+  activerecord:
+    schemalesss:
+      user:
+        role: reader
+        status:
+          active: Active
+          inactive: Inactive
+        gui:
+          cocoa: cocoa
+          gtk: gtk
+          qt: qt
+        country:
+          pt: Pt
+        language:
+          pt: Português
+          en: Inglês
+        sex:
+          "true": Feminino
+          "false": Masculino
+      user_skill:
+        kind:
+          magic: Mágica
+          agility: Agilidade
+    errors:
+      messages: &errors_messages
+        record_invalid: Inválido

@@ -1,0 +1,9 @@
+#
+# Schemaless Rubocop
+#
+AllCops:
+  Include:
+    - '**/Rakefile'
+    - '**/config.ru'
+  Exclude:
+    - 'spec/dummy/**/*'

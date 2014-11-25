@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    attributes:
+    schemalesss:
+      user:
+        language:
+          pt: Portuguese
+          en: English
+        sex:
+          "true": Female
+          "false": Male
+      user_skill:
+        kind:
+          magic: Magic
+          agility: Agility

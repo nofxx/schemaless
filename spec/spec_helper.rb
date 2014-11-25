@@ -1,0 +1,74 @@
+require 'rubygems'
+# require 'pry'
+begin
+  require 'spec'
+rescue LoadError
+  require 'rspec'
+end
+
+$LOAD_PATH.unshift(File.dirname(__FILE__))
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+ENV['RAILS_ENV'] ||= 'test'
+
+require 'rails'
+require 'active_record'
+require 'schemaless/active_record'
+
+puts "Using ActiveRecord #{ActiveRecord::VERSION::STRING}"
+
+ActiveRecord::Base.send :include, Schemaless::ActiveRecord # this is normally done by the railtie
+
+require File.expand_path("../dummy/config/environment.rb", __FILE__)
+# require 'i18n'
+require 'rspec/rails'
+require 'rspec/autorun'
+
+Rails.backtrace_cleaner.remove_silencers!
+
+I18n.load_path += Dir[File.join(File.dirname(__FILE__), 'locales', '*.{rb,yml}')]
+I18n.default_locale = 'pt'
+
+# Load support files
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+
+if ENV['CI']
+  require 'coveralls'
+  Coveralls.wear!
+end
+
+ActiveRecord::Migrator.migrate('spec/db')
+
+# [:users, :bikes, :places].each do |db|
+#   ActiveRecord::Migration.drop_table(db) rescue nil
+# end
+
+#ActiveRecord::Base.establish_connection(adapter: 'sqlite3',
+#                                        database: ':memory:')
+# 'postgresql', :database => 'schemaless_test', :username => 'postgres')
+
+# else
+#   require 'db/001_create_testing_structure'
+#   CreateTestingStructure.migrate(:up)
+# end
+
+# Dir["#{__dir__}/models/*.rb"].each do |source|
+#   require source
+# end
+
+Rails.application.eager_load!
+
+
+
+RSpec.configure do |config|
+
+  config.mock_with :rspec
+  config.use_transactional_fixtures = true
+  config.infer_base_class_for_anonymous_controllers = false
+  config.order = "random"
+
+  config.before(:each) do
+
+    # [User, Bike, Place].each(&:delete_all)
+  end
+
+end
