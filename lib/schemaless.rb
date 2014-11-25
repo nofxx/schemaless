@@ -2,7 +2,6 @@ module Schemaless
   autoload :ActiveRecord, 'schemaless/active_record'
 
   class << self
-
     def map_field(field)
       return field if field.is_a?(Symbol)
       case field.to_s
@@ -34,7 +33,7 @@ module Schemaless
       end
     end
 
-    def schema #(models)
+    def schema # (models)
       ::ActiveRecord::Base.descendants.reduce({}) do |a, e|
         next a if e.to_s =~ /ActiveRecord::/
         add_table(e.table_name) unless e.table_exists?
@@ -53,11 +52,11 @@ module Schemaless
 
     def work(hsh = nil)
       hsh ||= schema
-      hsh.each do |model, data|
+      hsh.each do |_model, data|
         # puts "Start with #{model} #{data}"
         attrs, fields = data[:attributes], data[:schemaless]
-        removed = attrs.select { |n, t| !fields.keys.include?(n) }
-        added = fields.select { |n, t| !attrs.keys.include?(n) }
+        removed = attrs.select { |n, _t| !fields.keys.include?(n) }
+        added = fields.select { |n, _t| !attrs.keys.include?(n) }
         add_fields(data[:table], added)
         del_fields(data[:table], removed)
       end

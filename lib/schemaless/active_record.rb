@@ -13,7 +13,6 @@ module Schemaless
     # Schemaless ActiveRecord attributes. Add
     #
     module ClassMethods
-
       # def inherited(subclass)
       #   puts "Ive been inherited by #{subclass}"
       #   subclass.cattr_accessor :schemaless_fields #, :instance_reader => false
@@ -30,13 +29,10 @@ module Schemaless
       def field(*attr_names)
         config = attr_names.extract_options!
         config.assert_valid_keys(:kind, :type, :default, :i18n)
-        p config[:type] || config[:kind]
         type = Schemaless.map_field(config[:type] || config[:kind]) || :string
 
         attr_names.each do |attr_name|
-          puts "---------------------------"
-          puts attr_name, type
-          self.schemaless_fields.merge!(attr_name.to_s => type)
+          schemaless_fields.merge!(attr_name.to_s => type)
         end
       end
 

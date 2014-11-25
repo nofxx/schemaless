@@ -8,13 +8,13 @@ describe 'Schemaless' do
   end
 
   it 'should get all models`s fields' do
-    bike_model = { "Bike" => { cc: String } }
-    expect(Schemaless.schema.keys).to include("Bike")
+    bike_model = { 'Bike' => { cc: String } }
+    expect(Schemaless.schema.keys).to include('Bike')
   end
 
   it 'should get all models`s fields' do
-    bike_model = { "Bike" => { cc: String } }
-    expect(Schemaless.schema.keys).to include("Bike")
+    bike_model = { 'Bike' => { cc: String } }
+    expect(Schemaless.schema.keys).to include('Bike')
   end
 
   #   u = User.create(name: 'Bob', other: :bar, status: :inactive, so: :mac, gui: :gtk, language: :en, sex: false, cool: false)
