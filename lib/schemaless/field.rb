@@ -13,22 +13,20 @@ module Schemaless
     end
 
     def <=>(other)
-      name == other.name && type == other.type
+      name == other.name #  && type == other.type
     end
 
     #
     # Add Fields
     #
     def add!
-      return if fields.empty?
+      # return if fields.empty?
       # print_work('++ Field', fields, table)
       return if Schemaless.sandbox
-      fields.each do |field, type|
-        if Schemaless.migrate
-          ::ActiveRecord::Migration.send(:add_column, table, field, type)
-        else
-          "add_column #{table}, #{field}, #{type}"
-        end
+      if Schemaless.migrate
+        ::ActiveRecord::Migration.send(:add_column, table, name, type)
+      else
+        "add_column #{table}, #{name}, #{type}"
       end
     end
 
@@ -36,15 +34,13 @@ module Schemaless
     # Delete Fields
     #
     def del!
-      return if fields.empty?
+      # return if fields.empty?
       # print_work('-- Field', fields, table)
-      return if sandbox
-      fields.each do |field, _type|
-        if Schemaless.migrate
-          ::ActiveRecord::Migration.send(:remove_column, table, field)
-        else
-          "add_column #{table}, #{field}, #{type}"
-        end
+      return if Schemaless.sandbox
+      if Schemaless.migrate
+        ::ActiveRecord::Migration.send(:remove_column, table, name)
+      else
+        "remove_column #{table}, #{name}, #{type}"
       end
     end
 

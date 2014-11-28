@@ -50,6 +50,7 @@ RSpec.configure do |config|
       ActiveRecord::Migration.drop_table(db) rescue nil
     end
     CreateTestingStructure.new.change
+    Schemaless.sandbox = nil
   end
 
   config.after(:each) do

@@ -9,6 +9,6 @@ class Bike < ActiveRecord::Base
 
   belongs_to :user
 
-  index cc: 1
+  index :cc
 
 end

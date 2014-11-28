@@ -15,14 +15,13 @@ module Schemaless
     # Add Indexes
     #
     def add!
-      print_work('++ Index', indexes, table)
-      return if sandbox
-      indexes.each do |index, _type|
-        if Schemaless.migrate
-          ::ActiveRecord::Migration.send(:add_index, table, index)
-        else
-          "add_index #{table}, #{index}"
-        end
+      #print_work('++ Index', indexes, table)
+      return if Schemaless.sandbox
+      # indexes.each do |index, _type|
+      if Schemaless.migrate
+        ::ActiveRecord::Migration.send(:add_index, table, name)
+      else
+        "add_index #{table}, #{nam}"
       end
     end
 
@@ -30,14 +29,13 @@ module Schemaless
     # Delete Indexes
     #
     def del!
-      print_work('-- Index', indexes, table)
-      return if sandbox
-      indexes.each do |index, _type|
-        if Schemaless.migrate
-          ::ActiveRecord::Migration.send(:remove_index, table, index)
-        else
-          "remove_index #{table}, #{index}"
-        end
+      # print_work('-- Index', indexes, table)
+      return if Schemaless.sandbox
+      # indexes.each do |index, _type|
+      if Schemaless.migrate
+        ::ActiveRecord::Migration.send(:remove_index, table, name)
+      else
+        "remove_index #{table}, #{name}"
       end
     end
   end
