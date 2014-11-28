@@ -8,5 +8,8 @@ module Schemaless
         ::ActiveRecord::Base.send :include, Schemaless::ActiveRecord
       end
     end
+    rake_tasks do
+      load 'tasks/schemaless_tasks.rake'
+    end
   end
 end

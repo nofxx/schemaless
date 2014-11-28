@@ -1,10 +1,12 @@
 #
 # Schemaless Tasks
 #
-namespace :db do
+namespace :schemaless do
+
 
   desc "Updates the database!"
-  task :up do
+  task :up => :environment do
+    Schemaless.sandbox = true if ARGV.join =~ /sandbox|print|safe/
     Schemaless.work
   end
 

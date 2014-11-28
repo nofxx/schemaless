@@ -9,18 +9,25 @@ class CreateTestingStructure < ActiveRecord::Migration
       t.boolean :cool
       t.integer :number
     end
+    add_index :users, :sex
+    add_index :users, :name
+    add_index :users, [:number, :status]
+
     create_table :user_skills do |t|
       t.references :user
       t.string :kind
     end
+
     create_table :user_extras do |t|
       t.references :user
       t.string :key, null: false
     end
+
     create_table :bikes do |t|
       t.string :name, null: false
       t.integer :cylinders
     end
+
     create_table :places do |t|
       t.string :name, null: false
     end
