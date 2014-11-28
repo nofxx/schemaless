@@ -2,9 +2,20 @@ require 'spec_helper'
 
 describe 'Schemaless::Table' do
 
+  before do
+    @app = ::ActiveRecord::Base.descendants
+  end
+
   it 'should instantiate' do
-    test = ::ActiveRecord::Base.descendants.last
-    expect { Schemaless::Table.new(test) }.to_not raise_error
+    expect { Schemaless::Table.new(@app.last) }.to_not raise_error
+  end
+
+  # it "should create tables nice" do
+  #   expect(Schemaless::Table.new(@app.last)).to include(Bike)
+  # end
+
+  it "should create tables nice" do
+    expect(Schemaless::Table.new(@app[1]).name).to eq("Place")
   end
 
 end

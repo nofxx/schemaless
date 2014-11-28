@@ -38,7 +38,7 @@ module Schemaless
 
       def belongs_to(*params)
         config = params.extract_options!
-        name = "#{params}_id"
+        name = "#{params.join}_id"
         schemaless_fields << ::Schemaless::Field.new(self.table_name, name, :belongs, config)
         super(*params)
       end

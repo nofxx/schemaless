@@ -10,7 +10,7 @@ describe 'Schemaless::Worker' do
   end
 
   it 'should work in sandbox mode' do
-    Schemaless.sandbox = true
+    # Schemaless.sandbox = true
     Schemaless::Worker.generate!
     expect { Bike.create!(name: "Gina", cc: 600) }.to raise_error
     expect(Bike.count).to be_zero

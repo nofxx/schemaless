@@ -5,49 +5,42 @@ module Schemaless
   class Field
     attr_accessor :table, :name, :type, :opts, :dynamic
 
-    def initialize(table, name, type, *opts)
+    def initialize(table, name, type, opts = {})
       @table = table
-      @name = name
+      @name = name.to_s
       @type = map_field type
       @opts = opts
     end
 
-    def <=>(other)
+    def ==(other)
       name == other.name #  && type == other.type
     end
 
     #
     # Add Fields
     #
-    def add!
-      # return if fields.empty?
-      # print_work('++ Field', fields, table)
+    def add_field!
       return if Schemaless.sandbox
-      if Schemaless.migrate
-        ::ActiveRecord::Migration.send(:add_column, table, name, type)
-      else
-        "add_column #{table}, #{name}, #{type}"
-      end
+      ::ActiveRecord::Migration.send(:add_column, table, name, type)
     end
 
     #
     # Delete Fields
     #
-    def del!
-      # return if fields.empty?
-      # print_work('-- Field', fields, table)
+    def del_field!
       return if Schemaless.sandbox
-      if Schemaless.migrate
-        ::ActiveRecord::Migration.send(:remove_column, table, name)
-      else
-        "remove_column #{table}, #{name}, #{type}"
-      end
+      ::ActiveRecord::Migration.send(:remove_column, table, name)
     end
 
     #
     # Change Fields
     #
     def change_fields(_table, _fields)
+    end
+
+    def migration(act)
+      extra = opts.empty? ? nil : ", #{extra.inspect}"
+      "#{act}_column '#{table}', '#{name}', :#{type}#{extra}"
     end
 
     #

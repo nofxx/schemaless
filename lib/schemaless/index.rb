@@ -5,38 +5,35 @@ module Schemaless
   class Index
     attr_accessor :table, :name, :opts
 
-    def initialize(table, name, *_opts)
+    def initialize(table, name, opts = {})
       @table = table
-      @name  = name
+      @name  = name.to_s
       @opts  = opts
     end
 
     #
     # Add Indexes
     #
-    def add!
+    def add_index!
       #print_work('++ Index', indexes, table)
       return if Schemaless.sandbox
       # indexes.each do |index, _type|
-      if Schemaless.migrate
-        ::ActiveRecord::Migration.send(:add_index, table, name)
-      else
-        "add_index #{table}, #{nam}"
-      end
+      ::ActiveRecord::Migration.send(:add_index, table, name)
     end
 
     #
     # Delete Indexes
     #
-    def del!
+    def del_index!
       # print_work('-- Index', indexes, table)
       return if Schemaless.sandbox
       # indexes.each do |index, _type|
-      if Schemaless.migrate
-        ::ActiveRecord::Migration.send(:remove_index, table, name)
-      else
-        "remove_index #{table}, #{name}"
-      end
+      ::ActiveRecord::Migration.send(:remove_index, table, name)
+    end
+
+    def migration(act)
+      extra = opts.empty? ? nil : ", #{opts.inspect}"
+      out ="#{act}_index '#{table}', '#{name}'#{extra}"
     end
   end
 end

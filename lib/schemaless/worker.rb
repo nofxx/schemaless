@@ -9,7 +9,8 @@ module Schemaless
 
       def run!
         set_tables
-        run_migrations
+        tables.each { |table| table.run! }
+        ::ActiveRecord::Base.descendants.each { |t| t.reset_column_information }
       end
 
       def generate!
@@ -32,25 +33,14 @@ module Schemaless
         end
       end
 
-      def run_migrations
-        tables.each do |table|
-          table.work_fields
-          table.work_indexes
-        end
-      end
-
       def generate_migrations
-        migrations = tables.map(&:migration)
-        migrations.each do |data|
-          Rails::Generators.invoke('active_record:migration', data,
-                                   behavior: :invoke,
-                                   destination_root: Rails.root)
-        end
-      end
-
-      def print_work(act, fields, table)
-        fields = fields.map { |k, v| "#{k}:#{v}"  } if fields.is_a?(Hash)
-        puts "#{act} '#{table}' | #{fields.join(', ')}"
+        migrations = tables.map(&:migrate).join("\n")
+        puts migrations
+        # migrations.each do |data|
+        #   ::Rails::Generators.invoke('active_record:migration', data,
+        #                            behavior: :invoke,
+        #                            destination_root: Rails.root)
+        # end
       end
 
     end # self
