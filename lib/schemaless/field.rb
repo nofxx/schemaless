@@ -21,7 +21,7 @@ module Schemaless
     #
     def add_field!
       return if Schemaless.sandbox
-      ::ActiveRecord::Migration.send(:add_column, table, name, type)
+      ::ActiveRecord::Migration.add_column(table, name, type)
     end
 
     #
@@ -29,13 +29,16 @@ module Schemaless
     #
     def del_field!
       return if Schemaless.sandbox
-      ::ActiveRecord::Migration.send(:remove_column, table, name)
+      ::ActiveRecord::Migration.remove_column(table, name)
     end
 
     #
     # Change Fields
     #
     def change_fields(_table, _fields)
+      # ::ActiveRecord::Migration.change_column(table, name)
+      # ::ActiveRecord::Migration.change_column_null(table, name)
+      # ::ActiveRecord::Migration.change_column_default(table, name)
     end
 
     def migration(act)
