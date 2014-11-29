@@ -6,4 +6,5 @@ AllCops:
     - '**/Rakefile'
     - '**/config.ru'
   Exclude:
+    - 'lib/generators/**/templates/*'
     - 'spec/dummy/**/*'

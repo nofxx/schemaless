@@ -20,7 +20,6 @@ require 'schemaless' # /active_record'
 require File.expand_path('../dummy/config/environment.rb', __FILE__)
 # require 'i18n'
 require 'rspec/rails'
-require 'rspec/autorun'
 
 Rails.backtrace_cleaner.remove_silencers!
 

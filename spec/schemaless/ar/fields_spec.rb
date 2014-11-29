@@ -14,4 +14,28 @@ describe 'Schemaless' do
     # bike_model = { 'Bike' => { cc: String } }
     expect(Bike.schemaless_indexes.map(&:name)).to include('cc')
   end
+
+  # it 'should get attribute type string' do
+  #   expect(Bike.schemaless_fields[:attr_db]['name']).to eq(:string)
+  # end
+
+  # it 'should get attribute type integer' do
+  #   expect(Schemaless.schema['Bike'][:attr_db]['cylinders']).to eq(:integer)
+  # end
+
+  # it 'should not include primary keys' do
+  #   expect(Schemaless.schema['Bike'][:attr_db]).to_not include('id')
+  # end
+
+  # it 'should get all models`s fields' do
+  #   expect(Schemaless.schema['Bike'][:model]).to eq(Bike)
+  # end
+
+  # it 'should not include primary keys' do
+  #   expect(Schemaless.schema['Bike'][:attr_schema]).to include('cc')
+  # end
+
+  # it 'should get schemaless types' do
+  #   expect(Schemaless.schema['Bike'][:attr_schema]['cc']).to eq(:integer)
+  # end
 end
