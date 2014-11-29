@@ -1,0 +1,3 @@
+module Schemaless
+  <%= comments %>
+end
