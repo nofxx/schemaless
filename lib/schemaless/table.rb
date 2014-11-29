@@ -56,15 +56,16 @@ module Schemaless
     def add_table!
       puts "Create table '#{name}' for #{model}"
       return if Schemaless.sandbox
-      if Schemaless.migrate
-        ::ActiveRecord::Migration.send(:create_table, name, *opts)
-      else
-        "create_table #{name}, #{opts}"
-      end
+      ::ActiveRecord::Migration.create_table(name, *opts)
     end
 
     def del_table!
-      ::ActiveRecord::Migration.drop_table(:users)
+      return if Schemaless.sandbox
+      ::ActiveRecord::Migration.drop_table(name)
+    end
+
+    def migration
+      "create_table #{name}, #{opts}"
     end
   end
 end

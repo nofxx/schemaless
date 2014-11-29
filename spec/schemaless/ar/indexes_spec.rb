@@ -2,15 +2,14 @@
 require 'spec_helper'
 
 describe 'Schemaless' do
+
   it 'should get all models`s fields' do
     expect(Bike.schemaless_indexes).to be_an(Array)
   end
 
-
   it 'should respond to schemaless' do
     expect(ActiveRecord::Base).to respond_to :index
   end
-
 
   # it 'should get attribute type string' do
   #   expect(Bike.schemaless_fields[:attr_db]['name']).to eq(:string)

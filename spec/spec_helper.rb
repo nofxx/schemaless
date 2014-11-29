@@ -15,7 +15,7 @@ require 'active_record'
 puts "Using ActiveRecord #{ActiveRecord::VERSION::STRING}"
 
 require 'schemaless' # /active_record'
-ActiveRecord::Base.send :include, Schemaless::ActiveRecord
+# ActiveRecord::Base.send :include, Schemaless::Fields
 
 require File.expand_path('../dummy/config/environment.rb', __FILE__)
 # require 'i18n'

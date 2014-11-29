@@ -7,20 +7,13 @@ require 'schemaless/table'
 require 'schemaless/worker'
 
 #
-# Schemaless
-#
-#
-# Life without migrations!
-#
+#           Schemaless
+# +_____________________________+
+# |      |         |            |
+# | Life | without | migrations !
+# |______|_________|____________|
 #
 module Schemaless
-  if defined? Rails && Rails.env =~ /production/
-    autoload :ActiveRecord, 'schemaless/ar/stubs'
-  else
-    autoload :ActiveRecord, 'schemaless/ar/fields'
-    autoload :ActiveRecord, 'schemaless/ar/indexes'
-  end
-
   class << self
     attr_accessor :sandbox # Sandbox mode for live
   end
