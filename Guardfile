@@ -1,7 +1,7 @@
 #
 # Schemaless Guardfile
 #
-ignore(/\/.#.+/)
+# ignore(/\/.#.+/)
 
 # notification :off
 
@@ -14,5 +14,7 @@ guard :rspec, cmd: 'bundle exec rspec', notification: true do
   watch(/^spec\/dummy\/(.+)\.rb$/)
   watch(/^spec\/.+_spec\.rb$/)
   watch(/^lib\/(.+)\.rb$/)     { |m| "spec/#{m[1]}_spec.rb" }
+  watch(/^generators\/(.+)\.rb$/) { |m| 'spec/schemaless/worker_spec' }
+
   watch('spec/spec_helper.rb')  { 'spec' }
 end
