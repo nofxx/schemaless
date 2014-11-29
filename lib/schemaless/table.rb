@@ -1,34 +1,17 @@
 module Schemaless
   # Appreciate the irony
-
+  #
+  # A Table, how much information! How much entropy!
+  #
   class Table
     attr_accessor :name, :current, :proposed, :model, :migration, :opts
     Schema = Struct.new(:fields, :indexes)
 
-    def initialize(model)
-      @model = model
-      @name = model.name
-      @current = from_ar(model)
-      @proposed = from_rb(model)
-      # Crazy, does not work: !table.table_exists?
-      add_table! unless ::ActiveRecord::Base.connection.tables.include?(name)
-    end
-
-    def from_rb(m)
-      Schema.new(m.schemaless_fields, m.schemaless_indexes)
-    end
-
-    def from_ar(m)
-      fields = m.columns_hash.map do |k, v|
-        next if v.primary # || k =~ /.*_id$/
-        opts = { limit: v.limit, precision: v.precision, scale: v.scale,
-                 null: v.null, default: v.default }
-        ::Schemaless::Field.new(m.table_name, k, v.type, opts)
-      end.reject!(&:nil?)
-      indexes = ::ActiveRecord::Base.connection.indexes(m).map do|i|
-        ::Schemaless::Index.new(m.table_name, i.name, i)
-      end
-      Schema.new(fields, indexes)
+    def initialize(m)
+      @model = m
+      @name = m.name
+      @current  = Schema.new(m.current_attributes, m.current_indexes)
+      @proposed = Schema.new(m.schemaless_fields, m.schemaless_indexes)
     end
 
     def new_fields
@@ -53,6 +36,9 @@ module Schemaless
     # Selects what needs to be done for fields.
     #
     def run!
+      # Crazy, does not work: !table.table_exists?
+      add_table! unless ::ActiveRecord::Base.connection.tables.include?(name)
+
       new_fields.each(&:add_field!)
       old_fields.each(&:del_field!)
       new_indexes.each(&:add_index!)

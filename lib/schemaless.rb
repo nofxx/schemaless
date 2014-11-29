@@ -6,6 +6,13 @@ require 'schemaless/index'
 require 'schemaless/table'
 require 'schemaless/worker'
 
+#
+# Schemaless
+#
+#
+# Life without migrations!
+#
+#
 module Schemaless
   autoload :ActiveRecord, 'schemaless/active_record'
 

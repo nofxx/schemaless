@@ -39,7 +39,7 @@ module Schemaless
     end
 
     def migration(act)
-      extra = opts.empty? ? nil : ", #{extra.inspect}"
+      extra = opts.empty? || act == :remove ? nil : ", #{extra.inspect}"
       "#{act}_column '#{table}', '#{name}', :#{type}#{extra}"
     end
 
@@ -56,7 +56,7 @@ module Schemaless
     # cidr_address
     # ip_address
     # mac_address
-    def map_field(field)
+    def map_field(field) # rubocop:disable Metrics/MethodLength
       return field if field.is_a?(Symbol)
       case field.to_s
       when /Integer|Fixnum|Numeric/ then :integer

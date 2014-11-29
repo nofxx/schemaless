@@ -3,14 +3,14 @@ module Schemaless
   # Do the twist!
   #
   module Worker
-
+    # Module class methods
     class << self
       attr_accessor :tables
 
       def run!
         set_tables
-        tables.each { |table| table.run! }
-        ::ActiveRecord::Base.descendants.each { |t| t.reset_column_information }
+        tables.each(&:run!)
+        ::ActiveRecord::Base.descendants.each(&:reset_column_information)
       end
 
       def generate!
@@ -42,7 +42,6 @@ module Schemaless
         #                            destination_root: Rails.root)
         # end
       end
-
     end # self
   end # Worker
 end # Schemaless

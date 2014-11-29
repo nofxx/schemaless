@@ -35,27 +35,12 @@ describe 'Schemaless' do
   #   expect(Schemaless.schema['Bike'][:attr_db]).to_not include('id')
   # end
 
-
-  #   u = User.create(name: 'Bob', other: :bar, status: :inactive, so: :mac, gui: :gtk, language: :en, sex: false, cool: false)
+  #   u = User.create(name: 'Bob', other: :bar, status: :inactive, cool: false)
   #   expect(u.errors.messages).to be_blank
   # end
 
   # it 'should work fine on create' do
-  #   u = User.create(name: 'Bob', other: :bar, status: :inactive, so: :mac, gui: :gtk, language: :en, sex: false, cool: false)
+  #   u = User.create(name: 'Bob')
   #   expect(User.count).to eq 1
   # end
-  # it 'should work nice with default values from active model' do
-  #   u = User.create(name: 'Niu', other: :bar, so: :mac, gui: :gtk, language: :en, sex: false, cool: false)
-  #   expect(u.errors.messages).to be_blank
-  #   expect(u.status).to eql(:active)
-  #   expect(u).to be_active
-  # end
-
-  # describe 'User Instantiated' do
-  #   subject do
-  #     User.create(:name => 'Anna', :other => :fo, :status => status, :so => so, :gui => :qt, :language => :pt, :sex => true, :cool => true)
-  #   end
-  #   let(:status) { :active }
-  #   let(:so) { :linux }
-
 end

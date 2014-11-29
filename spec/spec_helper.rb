@@ -16,7 +16,8 @@ require 'schemaless/active_record'
 
 puts "Using ActiveRecord #{ActiveRecord::VERSION::STRING}"
 
-ActiveRecord::Base.send :include, Schemaless::ActiveRecord # this is normally done by the railtie
+# this is normally done by the railtie
+ActiveRecord::Base.send :include, Schemaless::ActiveRecord
 
 require File.expand_path('../dummy/config/environment.rb', __FILE__)
 # require 'i18n'
@@ -25,8 +26,8 @@ require 'rspec/autorun'
 
 Rails.backtrace_cleaner.remove_silencers!
 
-I18n.load_path += Dir[File.join(File.dirname(__FILE__), 'locales', '*.{rb,yml}')]
-I18n.default_locale = 'pt'
+#I18n.load_path += Dir[File.join(File.dirname(__FILE__), 'locales', '*.yml')]
+#I18n.default_locale = 'pt'
 
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }

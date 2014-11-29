@@ -5,11 +5,12 @@ ignore(/\/.#.+/)
 
 # notification :off
 
-guard :rubocop, all_on_start: false, keep_failed: false, notification: false, cli: ['--format', 'emacs'] do
+guard :rubocop, all_on_start: false, keep_failed: false,
+      notification: false, cli: ['-D'] do
   watch(/^lib\/(.+)\.rb$/)
 end
 
-guard :rspec, cmd: 'bundle exec rspec', notification: true, title: 'GeoRuby' do
+guard :rspec, cmd: 'bundle exec rspec', notification: true do
   watch(/^spec\/dummy\/(.+)\.rb$/)
   watch(/^spec\/.+_spec\.rb$/)
   watch(/^lib\/(.+)\.rb$/)     { |m| "spec/#{m[1]}_spec.rb" }

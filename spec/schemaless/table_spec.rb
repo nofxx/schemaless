@@ -14,8 +14,8 @@ describe 'Schemaless::Table' do
   #   expect(Schemaless::Table.new(@app.last)).to include(Bike)
   # end
 
-  it "should create tables nice" do
-    expect(Schemaless::Table.new(@app[1]).name).to eq("Place")
+  it 'should create tables nice' do
+    expect(Schemaless::Table.new(@app[1]).name).to eq('Place')
   end
 
 end
