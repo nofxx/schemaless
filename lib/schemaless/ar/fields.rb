@@ -3,26 +3,28 @@ require 'active_support/core_ext/hash/keys'
 
 module Schemaless
   #
-  # Extend ActiveRecord for live and migrate way
+  # Extend ActiveRecord for #field
   #
-  module ActiveRecord
+  module Fields
     extend ActiveSupport::Concern
 
     included do
       def self.schemaless_fields
         @schemaless_fields ||= []
       end
-      def self.schemaless_indexes
-        @schemaless_indexes ||= []
-      end
     end
 
-    #
-    # Schemaless ActiveRecord attributes. Add
-    #
+    # Schemaless ActiveRecord fields
     module ClassMethods
       #
+      # field(*)
+      #
       # Gets all fields in the model in the schamless_fields array.
+      #
+      #     field :name                # Defaults String
+      #     field :cylinders, Integer  # Use Class or :symbols
+      #     field :type, index: true, default: nil, limit: 5
+      #
       #
       def field(*params)
         config = params.extract_options!
@@ -34,13 +36,9 @@ module Schemaless
           ::Schemaless::Field.new(table_name, name, type, config)
       end
 
-      def index(*params)
-        config = params.extract_options!
-        name = params.join
-        schemaless_indexes <<
-          ::Schemaless::Index.new(table_name, name, config)
-      end
-
+      #
+      # Create the belongs_to foreign keys
+      #
       def belongs_to(*params)
         config = params.extract_options!
         name = "#{params.join}_id"
@@ -49,6 +47,9 @@ module Schemaless
         super(*params)
       end
 
+      #
+      # Get all fields in a schemaless way
+      #
       def current_attributes
         columns_hash.map do |k, v|
           next if v.primary # || k =~ /.*_id$/
@@ -57,12 +58,6 @@ module Schemaless
           ::Schemaless::Field.new(table_name, k, v.type, opts)
         end.reject!(&:nil?)
       end
-
-      def current_indexes
-        ::ActiveRecord::Base.connection.indexes(self).map do|i|
-          ::Schemaless::Index.new(table_name, i.name, i)
-        end
-      end
     end
-  end # ActiveRecord
-end # Schemaless
+  end
+end

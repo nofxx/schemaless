@@ -14,11 +14,15 @@ require 'schemaless/worker'
 #
 #
 module Schemaless
-  autoload :ActiveRecord, 'schemaless/active_record'
+  if defined? Rails && Rails.env =~ /production/
+    autoload :ActiveRecord, 'schemaless/ar/stubs'
+  else
+    autoload :ActiveRecord, 'schemaless/ar/fields'
+    autoload :ActiveRecord, 'schemaless/ar/indexes'
+  end
 
   class << self
     attr_accessor :sandbox # Sandbox mode for live
-    attr_accessor :migrate # Migrate or create text migration
   end
 end
 

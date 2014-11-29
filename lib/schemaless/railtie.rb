@@ -5,7 +5,12 @@ module Schemaless
   class Railtie < Rails::Railtie
     initializer 'schemaless.insert_into_active_record' do
       ActiveSupport.on_load :active_record do
-        ::ActiveRecord::Base.send :include, Schemaless::ActiveRecord
+        if Rails.env =~ /production/
+          ::ActiveRecord::Base.send :include, Schemaless::Stubs
+        else
+          ::ActiveRecord::Base.send :include, Schemaless::Fields
+          ::ActiveRecord::Base.send :include, Schemaless::Indexes
+        end
       end
     end
     rake_tasks do
