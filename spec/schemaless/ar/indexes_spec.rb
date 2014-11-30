@@ -9,7 +9,7 @@ describe 'Schemaless' do
 
   it 'should get all models`s fields' do
     # bike_model = { 'Bike' => { cc: String } }
-    expect(Bike.schemaless_indexes.map(&:fields)).to include([:cc])
+    expect(Bike.schemaless_indexes.map(&:fields)).to include(:cc)
   end
 
   it 'should respond to schemaless' do

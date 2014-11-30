@@ -46,8 +46,9 @@ module Schemaless
     #
     def run!
       add_table! unless exists?
+      # Order matter here
+      (old_indexes + old_fields).each { |f| f.del!(self) }
       (new_fields + new_indexes).each { |f| f.add!(self) }
-      (old_fields + old_indexes).each { |f| f.del!(self) }
     end
 
     def migrate

@@ -8,6 +8,7 @@ module Schemaless
 
     def initialize(fields, name = nil, opts = {})
       @fields = [fields].flatten
+      @fields = @fields.first if @fields.size == 1
       @name = name || opts[:name]
       @opts = opts.select { |_k, v| v.present?  }
       @opts.merge!(name: @name) if @name

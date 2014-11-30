@@ -7,7 +7,6 @@ module Schemaless
   #
   module Fields
     extend ActiveSupport::Concern
-    ::Schemaless::Field::VALID_OPTS - [:index]
     included do
       def self.schemaless_fields
         @schemaless_fields ||= []
@@ -16,6 +15,7 @@ module Schemaless
 
     # Schemaless ActiveRecord fields
     module ClassMethods
+      AR_OPTS = ::Schemaless::Field::VALID_OPTS - [:index, :type]
       #
       # field(*)
       #
@@ -51,13 +51,12 @@ module Schemaless
       # Get all fields in a schemaless way
       #
       def current_attributes
-        keys =
         columns_hash.map do |k, v|
-          next if v.primary # || k =~ /.*_id$/
-          opts = keys.reduce({}) do |a, e|
+          next if v.primary
+          opts = AR_OPTS.reduce({}) do |a, e|
             v.send(e) ? a.merge(e => v.send(e)) : a
           end
-          ::Schemaless::Field.new(k, opts.delete(:type)v.type, opts)
+          ::Schemaless::Field.new(k, v.type, opts)
         end.reject!(&:nil?)
       end
     end
