@@ -15,6 +15,10 @@ describe 'Schemaless' do
     expect(Bike.schemaless_indexes.map(&:name)).to include('cc')
   end
 
+  it 'should get a model current attributes' do
+    expect(Bike.current_attributes.first).to be_a(::Schemaless::Field)
+  end
+
   # it 'should get attribute type string' do
   #   expect(Bike.schemaless_fields[:attr_db]['name']).to eq(:string)
   # end

@@ -40,5 +40,9 @@ describe 'Schemaless::Worker' do
       expect(File.exist?('spec/dummy/db/migrate/fu')).to eq(true)
     end
 
+    it 'should not touch database schema version' do
+      p ActiveRecord::Migrator.get_all_versions
+    end
+
   end
 end

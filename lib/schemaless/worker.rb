@@ -44,7 +44,6 @@ module Schemaless
           @tables << ::Schemaless::Table.new(table)
         end
       end
-
     end # self
   end # Worker
 end # Schemaless

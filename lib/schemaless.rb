@@ -1,6 +1,4 @@
-#
-# Schemaless Trouble to Worry!
-#
+require 'pry'
 require 'schemaless/field'
 require 'schemaless/index'
 require 'schemaless/table'

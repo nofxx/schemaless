@@ -7,7 +7,7 @@ module Schemaless
   #
   module Fields
     extend ActiveSupport::Concern
-
+    ::Schemaless::Field::VALID_OPTS - [:index]
     included do
       def self.schemaless_fields
         @schemaless_fields ||= []
@@ -28,9 +28,9 @@ module Schemaless
       #
       def field(*params)
         config = params.extract_options!
-        config.assert_valid_keys(:kind, :type, :default, :unique, :i18n)
-        type = config.delete(:type) || config.delete(:kind)
-        type ||= params.size > 1 ? params.pop : :string
+        config.assert_valid_keys(*::Schemaless::Field::VALID_OPTS)
+        type = config.delete(:type)
+        type ||= params.size > 1 ? params.pop : :string # TBD
         name = params.join
         schemaless_fields <<
           ::Schemaless::Field.new(name, type, config)
@@ -51,11 +51,13 @@ module Schemaless
       # Get all fields in a schemaless way
       #
       def current_attributes
+        keys =
         columns_hash.map do |k, v|
           next if v.primary # || k =~ /.*_id$/
-          opts = { limit: v.limit, precision: v.precision, scale: v.scale,
-                   null: v.null, default: v.default }
-          ::Schemaless::Field.new(k, v.type, opts)
+          opts = keys.reduce({}) do |a, e|
+            v.send(e) ? a.merge(e => v.send(e)) : a
+          end
+          ::Schemaless::Field.new(k, opts.delete(:type)v.type, opts)
         end.reject!(&:nil?)
       end
     end

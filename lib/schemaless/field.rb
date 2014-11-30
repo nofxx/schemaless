@@ -4,6 +4,7 @@ module Schemaless
   #
   class Field
     attr_accessor :name, :type, :default, :index
+    VALID_OPTS = [:type, :limit, :precision, :scale, :null, :default, :index]
 
     #
     # Field - name, type, opts: [:default, :null, :unique]
@@ -47,12 +48,14 @@ module Schemaless
     end
 
     def opts
-      @opts.map { |k, v| "#{k}: #{v}" }.join(', ')
+      @opts.select { |_k, v| v.present? }
+        .map { |k, v| "#{k}: #{v}" }.join(', ')
     end
 
     def to_s
       name
     end
+
     #
     # binary    # boolean
     # date      # datetime
@@ -66,6 +69,7 @@ module Schemaless
     # cidr_address
     # ip_address
     # mac_address
+    #
     def map_field(field) # rubocop:disable Metrics/MethodLength
       return field if field.is_a?(Symbol)
       case field.to_s

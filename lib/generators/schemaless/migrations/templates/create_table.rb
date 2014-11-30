@@ -8,7 +8,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration
       t.timestamps null: false
 <% end -%>
     end
-<% indexes[:add].each do |_act, index| -%>
+<% indexes[:add].each do |index| -%>
     add_index :<%= table_name %>, :<%= index.name %><%= index.opts %>
 <% end -%>
 <% fields[:add].select(&:reference?).reject(&:polymorphic?).each do |field| -%>

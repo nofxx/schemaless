@@ -19,23 +19,24 @@ module Schemaless
 
     attr_reader :table_name, :fields, :indexes, :migration_action, :join_tables
 
-    def file_name
-      return @file_name if @file_name
-      table = attributes.first
-      return "create_#{table.name}" unless table.exists?
-      name = []
-      if table.new_fields.any?
+    def build_file_name(name = [])
+      if @table.new_fields.any?
         name << :add
-        name << (table.new_fields.size > 3 ? :many : table.new_fields)
-        name << (table.old_fields.any? ? :and : :to)
+        name << (@table.new_fields.size > 3 ? :many : @table.new_fields)
+        name << (@table.old_fields.any? ? :and : :to)
       end
-      if table.old_fields.any?
+      if @table.old_fields.any?
         name << :remove
-        name << (table.old_fields.size > 3 ? :many : table.old_fields)
+        name << (@table.old_fields.size > 3 ? :many : @table.old_fields)
         name << :from
       end
       name << table_name
-      @file_name = name.flatten.join('_')
+    end
+
+    def file_name
+      return @file_name if @file_name
+      return "create_#{@table_name}" unless @table.exists?
+      @file_name = build_file_name.flatten.join('_')
     end
 
     # sets the default migration template that is being
@@ -44,7 +45,7 @@ module Schemaless
     # out in the command line, the migration template
     # and the table name instance variables are setup.
     def set_local_assigns!
-      @migration_template = 'migration.rb'
+      @migration_template = 'change_table.rb'
       @table              = attributes.first
       @table_name         = @table.name
 
@@ -64,12 +65,12 @@ module Schemaless
       #     set_index_names
       #   end
 
-      @migration_template = 'create_table_migration.rb' if file_name =~ /^create_(.+)/
+      @migration_template = 'create_table.rb' if file_name =~ /^create_(.+)/
     end
 
     def set_index_names
-      attributes.each_with_index do |attr, i|
-        attr.index_name = [attr, attributes[i - 1]].map { |a| index_name_for(a) }
+      attributes.each_with_index do |att, i|
+        att.index_name = [att, attributes[i - 1]].map { |a| index_name_for(a) }
       end
     end
 
