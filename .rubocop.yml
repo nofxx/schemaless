@@ -7,4 +7,5 @@ AllCops:
     - '**/config.ru'
   Exclude:
     - 'lib/generators/**/templates/*'
+    - 'db/**/*'
     - 'spec/dummy/**/*'
