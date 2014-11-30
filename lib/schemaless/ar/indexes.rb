@@ -28,7 +28,7 @@ module Schemaless
         config = params.extract_options!
         name = params.join
         schemaless_indexes <<
-          ::Schemaless::Index.new(table_name, name, config)
+          ::Schemaless::Index.new(name, config)
       end
 
       #
@@ -36,7 +36,7 @@ module Schemaless
       #
       def current_indexes
         ::ActiveRecord::Base.connection.indexes(self).map do|i|
-          ::Schemaless::Index.new(table_name, i.name, i)
+          ::Schemaless::Index.new(i.name, i)
         end
       end
     end

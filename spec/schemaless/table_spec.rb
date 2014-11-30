@@ -15,7 +15,11 @@ describe 'Schemaless::Table' do
   # end
 
   it 'should create tables nice' do
-    expect(Schemaless::Table.new(@app[1]).name).to eq('Place')
+    expect(Schemaless::Table.new(@app[1]).model).to eq(Place)
+  end
+
+  it 'should create tables nice' do
+    expect(Schemaless::Table.new(@app[1]).name).to eq('places')
   end
 
 end

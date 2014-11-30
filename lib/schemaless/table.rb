@@ -9,7 +9,7 @@ module Schemaless
 
     def initialize(m)
       @model = m
-      @name = m.name
+      @name = m.table_name
       @current  = Schema.new(m.current_attributes, m.current_indexes)
       @proposed = Schema.new(m.schemaless_fields, m.schemaless_indexes)
     end
@@ -30,24 +30,29 @@ module Schemaless
       current.indexes.reject { |f| proposed.indexes.include?(f) }
     end
     # changed = current.fields.select do |k, v|
-    #   proposed.fields[k] && v != proposed.fields[k]
+    #   proposed.fields[k] && v != pr oposed.fields[k]
     # end
     #
     # Selects what needs to be done for fields.
     #
     def run!
       # Crazy, does not work: !table.table_exists?
-      add_table! unless ::ActiveRecord::Base.connection.tables.include?(name)
+      add_table! unless exists?
 
-      new_fields.each(&:add_field!)
-      old_fields.each(&:del_field!)
-      new_indexes.each(&:add_index!)
-      old_indexes.each(&:del_index!)
+      (new_fields + new_indexes).each { |f| f.add!(self) }
+      (old_fields + old_indexes).each { |f| f.add!(self) }
     end
 
     def migrate
-      (new_fields + new_indexes).map { |f| f.migration(:add) } +
-        (old_fields + old_indexes).map { |f| f.migration(:remove) }
+      new_fields + new_indexes + old_fields + old_indexes
+    end
+
+    def migrate?
+      migrate.flatten.any?
+    end
+
+    def exists?
+      ::ActiveRecord::Base.connection.tables.include?(name)
     end
 
     #

@@ -33,7 +33,7 @@ module Schemaless
         type ||= params.size > 1 ? params.pop : :string
         name = params.join
         schemaless_fields <<
-          ::Schemaless::Field.new(table_name, name, type, config)
+          ::Schemaless::Field.new(name, type, config)
       end
 
       #
@@ -43,7 +43,7 @@ module Schemaless
         config = params.extract_options!
         name = "#{params.join}_id"
         schemaless_fields <<
-          ::Schemaless::Field.new(table_name, name, :belongs, config)
+          ::Schemaless::Field.new(name, :belongs, config)
         super(*params)
       end
 
@@ -55,7 +55,7 @@ module Schemaless
           next if v.primary # || k =~ /.*_id$/
           opts = { limit: v.limit, precision: v.precision, scale: v.scale,
                    null: v.null, default: v.default }
-          ::Schemaless::Field.new(table_name, k, v.type, opts)
+          ::Schemaless::Field.new(k, v.type, opts)
         end.reject!(&:nil?)
       end
     end

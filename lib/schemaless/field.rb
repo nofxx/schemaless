@@ -3,10 +3,9 @@ module Schemaless
   # Fields
   #
   class Field
-    attr_accessor :table, :name, :type, :opts, :dynamic
+    attr_accessor :name, :type, :opts, :dynamic
 
-    def initialize(table, name, type, opts = {})
-      @table = table
+    def initialize(name, type, opts = {})
       @name = name.to_s
       @type = map_field type
       @opts = opts
@@ -19,17 +18,17 @@ module Schemaless
     #
     # Add Fields
     #
-    def add_field!
+    def add!(table)
       return if Schemaless.sandbox
-      ::ActiveRecord::Migration.add_column(table, name, type)
+      ::ActiveRecord::Migration.add_column(table.name, name, type)
     end
 
     #
     # Delete Fields
     #
-    def del_field!
+    def del!(table)
       return if Schemaless.sandbox
-      ::ActiveRecord::Migration.remove_column(table, name)
+      ::ActiveRecord::Migration.remove_column(table.name, name)
     end
 
     #
@@ -41,11 +40,12 @@ module Schemaless
       # ::ActiveRecord::Migration.change_column_default(table, name)
     end
 
-    def migration(act)
-      extra = opts.empty? || act == :remove ? nil : ", #{extra.inspect}"
-      "#{act}_column '#{table}', '#{name}', :#{type}#{extra}"
+    def reference?
     end
 
+    def to_s
+      name
+    end
     #
     # binary    # boolean
     # date      # datetime
