@@ -1,4 +1,4 @@
-Schemaless 
+Schemaless
 ==========
 
 ** On ActiveRecord/PostgreSQL **
@@ -7,7 +7,7 @@ Schemaless
 ```ruby
 class Bike < ActiveRecord::Base
 
-  #     DB's field, DB type	
+  #     DB's field, DB type
   field :name               # omit for String
   field :cylinders, Integer # or Float, :decimal, :currency
   field :bought_at, Date    # :date, Time, :time
@@ -22,22 +22,30 @@ class Bike < ActiveRecord::Base
   index :name
   index :name, :cylinders
 
-  ...code...
+  ...
 
 end
 
 ```
 
+Why?
+---
+
 * Schema is **defined in code**, not in the DB.
-If you're in the dumb DB wagon, rejoice!
 (Plus no need for annotate models)
 
 * It's easier and **less time** consuming.
-Honestly, you never forgot that field and had to rewrite a migration?
+Honestly, you never forgot that field and had to re-run a migration?
 
-*
+* There's no footprint in production mode.
+No code executed in production mode.
 
-## DEVELOPMENT | Live mode
+
+How?
+---
+
+
+# DEVELOPMENT | Live mode
 
 This mode runs only in development mode.
 
@@ -47,7 +55,7 @@ And also now DB fields are nicely described in the model.rb.
 It's like NoSQL: fun!
 
 
-## COMMIT
+# COMMIT
 
 To commit your changes you have two options:
 
