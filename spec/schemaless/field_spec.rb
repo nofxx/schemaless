@@ -10,7 +10,6 @@ describe 'Field' do
     expect(Schemaless::Field.new('cc', Integer).type).to eq(:integer)
   end
 
-
   describe 'Field mapping' do
 
     it 'should map field integer' do

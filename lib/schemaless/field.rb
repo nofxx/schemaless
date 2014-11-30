@@ -3,16 +3,17 @@ module Schemaless
   # Fields
   #
   class Field
-    attr_accessor :name, :type, :default, :index
+    attr_accessor :name, :type, :opts, :default, :index
     VALID_OPTS = [:type, :limit, :precision, :scale, :null, :default, :index]
 
     #
     # Field - name, type, opts: [:default, :null, :unique]
     #
     def initialize(name, type, opts = {})
+      fail InvalidArgument, 'opts must be a hash' unless opts.is_a?(Hash)
       @name = name.to_s
       @type = map_field type
-      @opts = opts
+      @opts = opts.select { |_k, v| v.present? }
     end
 
     def ==(other)
@@ -47,9 +48,8 @@ module Schemaless
     def reference?
     end
 
-    def opts
-      @opts.select { |_k, v| v.present? }
-        .map { |k, v| "#{k}: #{v}" }.join(', ')
+    def opts_text
+      opts.map { |k, v| "#{k}: #{v}" }.join(', ')
     end
 
     def to_s

@@ -45,7 +45,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     [:users, :bikes, :places, :user_skills, :user_extras].each do |db|
-      ActiveRecord::Migration.drop_table(db) rescue nil
+      ActiveRecord::Migration.drop_table(db) rescue nil # rubocop:disable Style/RescueModifier
     end
     CreateTestingStructure.new.change
     Schemaless.sandbox = nil

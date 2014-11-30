@@ -7,8 +7,17 @@ describe 'Schemaless' do
     expect(Bike.schemaless_indexes).to be_an(Array)
   end
 
+  it 'should get all models`s fields' do
+    # bike_model = { 'Bike' => { cc: String } }
+    expect(Bike.schemaless_indexes.map(&:fields)).to include([:cc])
+  end
+
   it 'should respond to schemaless' do
     expect(ActiveRecord::Base).to respond_to :index
+  end
+
+  it 'should get current indexes' do
+    expect(User.current_indexes).to be_an(Array)
   end
 
   #   u = User.create(name: 'Bob', other: :bar, status: :inactive, cool: false)

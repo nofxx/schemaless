@@ -41,7 +41,8 @@ describe 'Schemaless::Worker' do
     end
 
     it 'should not touch database schema version' do
-      p ActiveRecord::Migrator.get_all_versions
+      expect { Schemaless::Worker.run! }
+        .to_not change(ActiveRecord::Migrator, :get_all_versions)
     end
 
   end

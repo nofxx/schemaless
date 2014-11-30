@@ -3,39 +3,43 @@ module Schemaless
   # Stores indexes
   #
   class Index
-    attr_accessor :name, :opts
+    attr_accessor :fields, :name, :opts
+    VALID_OPTS = [:unique, :orders]
 
-    def initialize(name, opts = {})
-      @name   = name.to_s
-      @opts   = opts
-      @unique = opts.delete(:unique) == true
+    def initialize(fields, name = nil, opts = {})
+      @fields = [fields].flatten
+      @name = name || opts[:name]
+      @opts = opts.select { |_k, v| v.present?  }
+      @opts.merge!(name: @name) if @name
+    end
+
+    def opts_text
+      opts.map { |k, v| "#{k}: #{v}" }.join(', ')
     end
 
     def to_s
       name
     end
 
-    def unique?
+    def ==(other)
+      name == other.name
     end
+
     #
     # Add Indexes
     #
     def add!(table)
-      # print_work('++ Index', indexes, table)
       return if Schemaless.sandbox
-      # indexes.each do |index, _type|
-      ::ActiveRecord::Migration.add_index(table.name, name)
+      ::ActiveRecord::Migration.add_index(table.name, fields, opts)
     end
 
     #
     # Delete Indexes
     #
     def del!(table)
-      # print_work('-- Index', indexes, table)
       return if Schemaless.sandbox
-      # indexes.each do |index, _type|
-      ::ActiveRecord::Migration.remove_index(table.name, name)
+      key = name ? { name: name } : { column: fields }
+      ::ActiveRecord::Migration.remove_index(table.name, key)
     end
-
   end
 end

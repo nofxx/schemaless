@@ -26,17 +26,20 @@ module Schemaless
       #
       def index(*params)
         config = params.extract_options!
-        name = params.join
+        name = config.delete(:name)
         schemaless_indexes <<
-          ::Schemaless::Index.new(name, config)
+          ::Schemaless::Index.new(params, name, config)
       end
 
       #
       # Get all indexes in a schemaless way
       #
       def current_indexes
-        ::ActiveRecord::Base.connection.indexes(self).map do|i|
-          ::Schemaless::Index.new(i.name, i)
+        ::ActiveRecord::Base.connection.indexes(table_name).map do |i|
+          opts = ::Schemaless::Index::VALID_OPTS.reduce({}) do |a, e|
+            i.send(e) ? a.merge(e => i.send(e)) : a
+          end
+          ::Schemaless::Index.new(i.columns, i.name, opts)
         end
       end
     end
