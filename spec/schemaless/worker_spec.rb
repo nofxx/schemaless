@@ -32,4 +32,13 @@ describe 'Schemaless::Worker' do
     end
 
   end
+
+  describe 'Migrations' do
+
+    it 'should create migration files' do
+      Schemaless::Worker.generate!
+      expect(File.exist?('spec/dummy/db/migrate/fu')).to eq(true)
+    end
+
+  end
 end

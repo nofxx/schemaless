@@ -7,7 +7,7 @@ describe 'Field' do
   end
 
   it 'should have a type' do
-    expect(Schemaless::Field.new('cc', Integer).type).to eq('cc')
+    expect(Schemaless::Field.new('cc', Integer).type).to eq(:integer)
   end
 
 

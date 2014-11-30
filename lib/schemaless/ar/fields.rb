@@ -29,7 +29,7 @@ module Schemaless
       def field(*params)
         config = params.extract_options!
         config.assert_valid_keys(:kind, :type, :default, :unique, :i18n)
-        type = config[:type] || config[:kind]
+        type = config.delete(:type) || config.delete(:kind)
         type ||= params.size > 1 ? params.pop : :string
         name = params.join
         schemaless_fields <<

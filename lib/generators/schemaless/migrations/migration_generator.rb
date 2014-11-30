@@ -35,7 +35,6 @@ module Schemaless
         name << :from
       end
       name << table_name
-      p "FUCK #{name}"
       @file_name = name.flatten.join('_')
     end
 
@@ -48,7 +47,8 @@ module Schemaless
       @migration_template = 'migration.rb'
       @table              = attributes.first
       @table_name         = @table.name
-      @fields = { add: @table.new_fields, remove: @table.old_fields }
+
+      @fields  = { add: @table.new_fields, remove: @table.old_fields }
       @indexes = { add: @table.new_indexes, remove: @table.old_indexes }
 
       # case file_name

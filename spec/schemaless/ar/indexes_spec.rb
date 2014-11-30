@@ -20,8 +20,6 @@ describe 'Schemaless' do
   #   expect(User.count).to eq 1
   # end
 
-
-
   # it 'should get all models`s fields' do
   #   expect(Schemaless.schema['User'][:index_db]).to be_an(Array)
   # end

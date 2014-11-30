@@ -3,8 +3,11 @@ module Schemaless
   # Fields
   #
   class Field
-    attr_accessor :name, :type, :opts, :dynamic
+    attr_accessor :name, :type, :default, :index
 
+    #
+    # Field - name, type, opts: [:default, :null, :unique]
+    #
     def initialize(name, type, opts = {})
       @name = name.to_s
       @type = map_field type
@@ -20,7 +23,7 @@ module Schemaless
     #
     def add!(table)
       return if Schemaless.sandbox
-      ::ActiveRecord::Migration.add_column(table.name, name, type)
+      ::ActiveRecord::Migration.add_column(table.name, name, type, opts)
     end
 
     #
@@ -41,6 +44,10 @@ module Schemaless
     end
 
     def reference?
+    end
+
+    def opts
+      @opts.map { |k, v| "#{k}: #{v}" }.join(', ')
     end
 
     def to_s

@@ -6,6 +6,7 @@ require 'schemaless/index'
 require 'schemaless/table'
 require 'schemaless/worker'
 
+require 'generators/schemaless/migrations/migration_generator'
 #
 #           Schemaless
 # +_____________________________+

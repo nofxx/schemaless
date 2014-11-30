@@ -7,15 +7,27 @@ module Schemaless
     class << self
       attr_accessor :tables
 
+      #
+      # Run Schemaless live mode
+      #
       def run!
         set_tables
         tables.each(&:run!)
         ::ActiveRecord::Base.descendants.each(&:reset_column_information)
       end
 
+      #
+      # Run Schemaless migrations
+      #
+      # ::Rails::Generators
+      #   .invoke('schemaless:migration', data, file_name: 'fu',
+      #           behavior: :invoke, destination_root: Rails.root)
       def generate!
         set_tables
-        generate_migrations
+        tables.each do |table|
+          next unless table.migrate?
+          Schemaless::MigrationGenerator.new([table]).invoke_all
+        end
       end
 
       #
@@ -33,15 +45,6 @@ module Schemaless
         end
       end
 
-      def generate_migrations
-        migrations = tables.map(&:migrate).join("\n")
-        puts migrations
-        # migrations.each do |data|
-        #   ::Rails::Generators.invoke('active_record:migration', data,
-        #                            behavior: :invoke,
-        #                            destination_root: Rails.root)
-        # end
-      end
     end # self
   end # Worker
 end # Schemaless
