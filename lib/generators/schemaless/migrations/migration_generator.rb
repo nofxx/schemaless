@@ -20,14 +20,14 @@ module Schemaless
     attr_reader :table_name, :fields, :indexes, :migration_action, :join_tables
 
     def build_file_name(name = [])
-      if @table.new_fields.any?
+      if @table.fields.add.any?
         name << :add
-        name << (@table.new_fields.size > 3 ? :many : @table.new_fields)
-        name << (@table.old_fields.any? ? :and : :to)
+        name << (@table.fields.add.size > 3 ? :many : @table.fields.add)
+        name << (@table.fields.remove.any? ? :and : :to)
       end
-      if @table.old_fields.any?
+      if @table.fields.remove.any?
         name << :remove
-        name << (@table.old_fields.size > 3 ? :many : @table.old_fields)
+        name << (@table.fields.remove.size > 3 ? :many : @table.fields.remove)
         name << :from
       end
       name << table_name
@@ -45,12 +45,12 @@ module Schemaless
     # out in the command line, the migration template
     # and the table name instance variables are setup.
     def set_local_assigns!
-      @migration_template = 'change_table.rb'
-      @table              = attributes.first
-      @table_name         = @table.name
+      @table   = attributes.first
+      @fields  = @table.fields
+      @indexes = @table.indexes
 
-      @fields  = { add: @table.new_fields, remove: @table.old_fields }
-      @indexes = { add: @table.new_indexes, remove: @table.old_indexes }
+      @migration_template = 'change_table.rb'
+      @table_name         = @table.name
 
       # case file_name
       # when /join_table/
@@ -88,6 +88,9 @@ module Schemaless
       attributes.select { |a| !a.reference? && a.has_index? }
     end
 
+    def old_migrations
+      ActiveRecord::Migrator.get_all_versions
+    end
     # def validate_file_name!
     #   unless file_name =~ /^[_a-z0-9]+$/
     #     fail IllegalMigrationNameError, file_name

@@ -18,6 +18,10 @@ module Schemaless
       opts.map { |k, v| "#{k}: #{v}" }.join(', ')
     end
 
+    def fields_text
+      @fields.inspect
+    end
+
     def to_s
       name
     end
@@ -41,6 +45,14 @@ module Schemaless
       return if Schemaless.sandbox
       key = name ? { name: name } : { column: fields }
       ::ActiveRecord::Migration.remove_index(table.name, key)
+    end
+
+    #
+    # Change Indexes
+    #
+    def change!(table)
+      return if Schemaless.sandbox
+      ::ActiveRecord::Migration.change_index(table.name, name, type, opts)
     end
   end
 end

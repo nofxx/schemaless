@@ -4,59 +4,61 @@ module Schemaless
   # A Table, how much information! How much entropy!
   #
   class Table
-    attr_accessor :name, :current, :proposed, :model, :migration, :opts
+    attr_accessor :name, :current, :proposed, :fields, :indexes, :model, :opts
+
     Schema = Struct.new(:fields, :indexes)
+
+    Diffs  = Struct.new(:proposed, :current) do
+      def add
+        return proposed unless current
+        @add ||= proposed.reject { |o| current.include?(o) }
+      end
+
+      def remove
+        return [] unless current
+        @remove ||= current.reject { |o| proposed.include?(o) }
+      end
+
+      def change
+        return [] unless current
+        @change ||= \
+        (proposed - add - remove).select do |f|
+          other = current.select { |c| c.name == f.name }.first
+          f.opts != other.opts
+        end
+      end
+
+      def migrate?
+        (add + remove + change).any?
+      end
+    end
 
     def initialize(m)
       @model = m
       @name  = m.table_name
       @proposed = Schema.new(m.schemaless_fields, m.schemaless_indexes)
       set_current if exists?
+      @fields  = Diffs.new(@proposed.fields, @current.try(:fields))
+      @indexes = Diffs.new(@proposed.indexes, @current.try(:indexes))
     end
 
     def set_current
       @current = Schema.new(model.current_attributes, model.current_indexes)
     end
 
-    def new_fields
-      return proposed.fields unless current
-      proposed.fields.reject { |f| current.fields.include?(f) }
-    end
-
-    def old_fields
-      return [] unless exists?
-      current.fields.reject { |f| proposed.fields.include?(f) }
-    end
-
-    def new_indexes
-      return proposed.indexes unless current
-      proposed.indexes.reject { |f| current.indexes.include?(f) }
-    end
-
-    def old_indexes
-      return [] unless exists?
-      current.indexes.reject { |f| proposed.indexes.include?(f) }
-    end
-    # changed = current.fields.select do |k, v|
-    #   proposed.fields[k] && v != pr oposed.fields[k]
-    # end
     #
-
     # Selects what needs to be done for fields.
     #
     def run!
       add_table! unless exists?
       # Order matter here
-      (old_indexes + old_fields).each { |f| f.del!(self) }
-      (new_fields + new_indexes).each { |f| f.add!(self) }
-    end
-
-    def migrate
-      new_fields + new_indexes + old_fields + old_indexes
+      (indexes.change + fields.change).each { |f| f.change!(self) }
+      (indexes.remove + fields.remove).each { |f| f.del!(self) }
+      (fields.add + indexes.add).each { |f| f.add!(self) }
     end
 
     def migrate?
-      migrate.flatten.any?
+      fields.migrate? || indexes.migrate?
     end
 
     def exists?
@@ -78,10 +80,6 @@ module Schemaless
       return if Schemaless.sandbox
       ::ActiveRecord::Migration.drop_table(name)
       @current = nil
-    end
-
-    def migration
-      "create_table #{name}, #{opts}"
     end
   end
 end

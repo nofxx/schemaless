@@ -1,22 +1,26 @@
 class <%= migration_class_name %> < ActiveRecord::Migration
   def change
-<%- fields.each do |act, group| -%>
-  <%- group.each do |field| -%>
+<%- fields.add.each do |field| -%>
   <%- if field.reference? -%>
     add_reference :<%= table_name %>, :<%= field.name %><%= field.opts_text %>
     <%- unless field.polymorphic? -%>
     add_foreign_key :<%= table_name %>, :<%= field.name.pluralize %>
     <%- end -%>
-  <%- else -%>
-    <%= act %>_column :<%= table_name %>, :<%= field.name %>, :<%= field.type %><%= field.opts_text %>
-    <%- if false # field.has_index? -%>
-    add_index :<%= table_name %>, :<%= field.index_name %><%= field.opts_text %>
-    <%- end -%>
   <%- end -%>
+    add_column :<%= table_name %>, :<%= field.name %>, :<%= field.type %><%= field.opts_text %>
 <%- end -%>
-<% indexes[:add].each do |index| -%>
-    add_index :<%= table_name %>, <%= index.fields %><%= index.opts_text %>
-<% end -%>
+<%- fields.change.each do |field| -%>
+    change_column :<%= table_name %>, :<%= field.name %>, :<%= field.type %><%= field.opts_text %>
+<%- end -%>
+
+<%- indexes.remove do |index| -%>
+    remove_index :<%= table_name %>, <%= index.fields_text %>
+<%- end -%>
+<%- fields.remove.each do |field| -%>
+    remove_column :<%= table_name %>, :<%= field.name %>
+<%- end -%>
+<%- indexes.add.each do |index| -%>
+    add_index :<%= table_name %>, <%= index.fields_text %><%= index.opts_text %>
 <%- end -%>
   end
 <%- if migration_action == 'join' -%>

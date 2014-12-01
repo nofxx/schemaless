@@ -20,6 +20,17 @@ module Schemaless
       name == other.name #  && type == other.type
     end
 
+    def reference?
+    end
+
+    def opts_text
+      opts.map { |k, v| "#{k}: #{v}" }.join(', ')
+    end
+
+    def to_s
+      name
+    end
+
     #
     # Add Fields
     #
@@ -39,21 +50,12 @@ module Schemaless
     #
     # Change Fields
     #
-    def change_fields(_table, _fields)
+    def change!(table)
+      return if Schemaless.sandbox
       # ::ActiveRecord::Migration.change_column(table, name)
       # ::ActiveRecord::Migration.change_column_null(table, name)
       # ::ActiveRecord::Migration.change_column_default(table, name)
-    end
-
-    def reference?
-    end
-
-    def opts_text
-      opts.map { |k, v| "#{k}: #{v}" }.join(', ')
-    end
-
-    def to_s
-      name
+      ::ActiveRecord::Migration.change_column(table.name, name, type, opts)
     end
 
     #
