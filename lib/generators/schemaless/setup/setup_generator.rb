@@ -7,7 +7,7 @@ module Schemaless
 
     def create_config_file
       gem 'schemaless'
-      application 'config.middeware.use SchemalessMiddleware'
+      application 'config.middleware.use SchemalessMiddleware'
       # initializer | application
       # copy 'schemaless.rb'
     end
