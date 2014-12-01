@@ -36,13 +36,15 @@ module Schemaless
       @model = m
       @name  = m.table_name
       @proposed = Schema.new(m.schemaless_fields, m.schemaless_indexes)
-      set_current if exists?
-      @fields  = Diffs.new(@proposed.fields, @current.try(:fields))
-      @indexes = Diffs.new(@proposed.indexes, @current.try(:indexes))
+      set_table
     end
 
-    def set_current
-      @current = Schema.new(model.current_attributes, model.current_indexes)
+    def set_table
+      if exists?
+        @current = Schema.new(model.current_attributes, model.current_indexes)
+      end
+      @fields  = Diffs.new(@proposed.fields, @current.try(:fields))
+      @indexes = Diffs.new(@proposed.indexes, @current.try(:indexes))
     end
 
     #
@@ -54,6 +56,8 @@ module Schemaless
       (indexes.change + fields.change).each { |f| f.change!(self) }
       (indexes.remove + fields.remove).each { |f| f.remove!(self) }
       (fields.add + indexes.add).each { |f| f.add!(self) }
+
+      model.reset_column_information
     end
 
     def migrate?
@@ -65,6 +69,10 @@ module Schemaless
       ::ActiveRecord::Base.connection.tables.include?(name)
     end
 
+    def to_s
+      name
+    end
+
     #
     # Creates tables
     #
@@ -72,7 +80,8 @@ module Schemaless
       puts "Create table '#{name}' for #{model}"
       return if Schemaless.sandbox
       ::ActiveRecord::Migration.create_table(name, *opts)
-      set_current
+      ::ActiveRecord::Base.clear_cache!
+      set_table
     end
 
     def del_table!

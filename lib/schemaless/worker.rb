@@ -10,10 +10,8 @@ module Schemaless
       # Run Schemaless live mode
       #
       def run!
-        ::Rails.application.eager_load!
-        ::ActiveRecord::Base.descendants.each(&:reset_column_information)
+        # ::Rails.application.eager_load!
         all_tables.each(&:run!)
-        ::ActiveRecord::Base.descendants.each(&:reset_column_information)
       end
 
       #

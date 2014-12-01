@@ -9,6 +9,13 @@ describe 'Schemaless::Worker' do
     expect(Bike.count).to eq(1)
   end
 
+  it 'should re-run nicely' do
+    Schemaless::Worker.run!
+    Schemaless::Worker.run!
+    expect { Bike.create!(name: 'Gina', cc: 600) }.to_not raise_error
+    expect(Bike.count).to eq(1)
+  end
+
   it 'should work in sandbox mode' do
     pending
     # Schemaless.sandbox = true
@@ -37,6 +44,7 @@ describe 'Schemaless::Worker' do
   describe 'Migrations' do
 
     it 'should create migration files' do
+      pending
       Schemaless::Worker.generate!
       expect(File.exist?('spec/dummy/db/migrate/fu')).to eq(true)
     end

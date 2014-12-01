@@ -38,6 +38,7 @@ module Schemaless
     # Add Fields
     #
     def add!(table)
+      puts "++ Adding '#{self}' to '#{table}'"
       return if Schemaless.sandbox
       ::ActiveRecord::Migration.add_column(table.name, name, type, opts)
     end
@@ -46,6 +47,7 @@ module Schemaless
     # Delete Fields
     #
     def remove!(table)
+      puts "-- Removing '#{self}' from '#{table}'"
       return if Schemaless.sandbox
       ::ActiveRecord::Migration.remove_column(table.name, name)
     end
