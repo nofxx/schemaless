@@ -5,14 +5,14 @@ module Schemaless
   module Worker
     # Module class methods
     class << self
-      attr_accessor :tables
 
       #
       # Run Schemaless live mode
       #
       def run!
-        set_tables
-        tables.each(&:run!)
+        ::Rails.application.eager_load!
+        ::ActiveRecord::Base.descendants.each(&:reset_column_information)
+        all_tables.each(&:run!)
         ::ActiveRecord::Base.descendants.each(&:reset_column_information)
       end
 
@@ -24,8 +24,7 @@ module Schemaless
       #           behavior: :invoke, destination_root: Rails.root)
       def generate!
         ::ActiveRecord::Base.establish_connection 'production'
-        set_tables
-        tables.each do |table|
+        all_tables.each do |table|
           next unless table.migrate?
           Schemaless::MigrationGenerator.new([table]).invoke_all
         end
@@ -34,16 +33,16 @@ module Schemaless
       #
       # Work!
       #
-      def set_tables # (models)
-        @tables = []
-        ::Rails.application.eager_load!
-        tables = ::ActiveRecord::Base.descendants
-        fail 'No models...eager load off?' if tables.empty?
-        tables.each do |table|
-          next if table.to_s =~ /ActiveRecord::/
-          table.reset_column_information
-          @tables << ::Schemaless::Table.new(table)
+      def all_tables # (models)
+        tables = []
+        models = ::ActiveRecord::Base.descendants
+        fail 'No models...eager load off?' if models.empty?
+        models.each do |model|
+          next if model.to_s =~ /ActiveRecord::/
+          model.reset_column_information
+          tables << ::Schemaless::Table.new(model)
         end
+        tables
       end
     end # self
   end # Worker
