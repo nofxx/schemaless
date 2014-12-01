@@ -77,7 +77,7 @@ module Schemaless
     # Creates tables
     #
     def add_table!
-      puts "Create table '#{name}' for #{model}"
+      puts "++ Create table '#{name}' for '#{model}'"
       return if Schemaless.sandbox
       ::ActiveRecord::Migration.create_table(name, *opts)
       ::ActiveRecord::Base.clear_cache!
@@ -85,9 +85,10 @@ module Schemaless
     end
 
     def del_table!
+      puts "-- Remove table '#{name}' for '#{model}'"
       return if Schemaless.sandbox
       ::ActiveRecord::Migration.drop_table(name)
-      @current = nil
+      set_table
     end
   end
 end
