@@ -7,6 +7,6 @@ class SchemalessMiddleware
   def call(env)
     return if env =~ /production/
     puts "Schemaless running on #{env} mode"
-    ::Schemaless::Work.run!
+    ::Schemaless::Worker.run!
   end
 end
