@@ -1,9 +1,9 @@
+# require 'pry'
 require 'schemaless/field'
 require 'schemaless/index'
 require 'schemaless/table'
 require 'schemaless/worker'
 
-require 'schemaless/middleware'
 require 'generators/schemaless/migrations/migration_generator'
 #
 #           Schemaless

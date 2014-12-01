@@ -6,7 +6,9 @@ module Schemaless
     desc 'Schemaless config files generator!'
 
     def create_config_file
-      application 'config.middleware.use SchemalessMiddleware'
+      application 'end'
+      application '  Schemaless::Worker.run!'
+      application 'config.to_prepare do'
       # initializer | application
       # copy 'schemaless.rb'
     end

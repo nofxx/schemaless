@@ -34,7 +34,7 @@ module Schemaless
       def all_tables # (models)
         tables = []
         models = ::ActiveRecord::Base.descendants
-        fail 'No models...eager load off?' if models.empty?
+        #fail 'No models...eager load off?' if models.empty?
         models.each do |model|
           next if model.to_s =~ /ActiveRecord::/
           model.reset_column_information
