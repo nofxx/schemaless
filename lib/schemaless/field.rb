@@ -14,6 +14,8 @@ module Schemaless
       @name = name.to_s
       @type = map_field type
       @opts = opts.select { |_k, v| v.present? }
+      @opts[:null] = true unless @opts[:null].present?
+      @opts[:limit] = 255 unless @opts[:limit].present? || @type != :string
     end
 
     def ==(other)
@@ -24,7 +26,8 @@ module Schemaless
     end
 
     def opts_text
-      opts.map { |k, v| "#{k}: #{v}" }.join(', ')
+      txt = opts.map { |k, v| "#{k}: #{v}" }.join(', ')
+      txt.empty? ? '' : ", #{txt}"
     end
 
     def to_s
@@ -42,7 +45,7 @@ module Schemaless
     #
     # Delete Fields
     #
-    def del!(table)
+    def remove!(table)
       return if Schemaless.sandbox
       ::ActiveRecord::Migration.remove_column(table.name, name)
     end

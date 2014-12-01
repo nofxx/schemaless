@@ -15,7 +15,8 @@ module Schemaless
     end
 
     def opts_text
-      opts.map { |k, v| "#{k}: #{v}" }.join(', ')
+      txt = opts.map { |k, v| "#{k}: #{v}" }.join(', ')
+      txt.empty? ? '' : ", #{txt}"
     end
 
     def fields_text
@@ -41,7 +42,7 @@ module Schemaless
     #
     # Delete Indexes
     #
-    def del!(table)
+    def remove!(table)
       return if Schemaless.sandbox
       key = name ? { name: name } : { column: fields }
       ::ActiveRecord::Migration.remove_index(table.name, key)

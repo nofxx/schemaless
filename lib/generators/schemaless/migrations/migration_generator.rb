@@ -7,7 +7,7 @@ module Schemaless
     include Rails::Generators::Migration
     source_root File.expand_path('../templates', __FILE__)
     argument :attributes, type: :array # , default: [] # , banner: 'path'
-    desc 'Schemaless config files generator!'
+    desc 'Schemaless migration files generator!'
 
     def create_migration_file
       set_local_assigns!
@@ -39,11 +39,6 @@ module Schemaless
       @file_name = build_file_name.flatten.join('_')
     end
 
-    # sets the default migration template that is being
-    # used for the generation of the migration
-    # depending on the arguments which would be sent
-    # out in the command line, the migration template
-    # and the table name instance variables are setup.
     def set_local_assigns!
       @table   = attributes.first
       @fields  = @table.fields
@@ -84,13 +79,14 @@ module Schemaless
 
     private
 
-    def attributes_with_index
-      attributes.select { |a| !a.reference? && a.has_index? }
-    end
+    # def attributes_with_index
+    #   attributes.select { |a| !a.reference? && a.has_index? }
+    # end
 
     def old_migrations
       ActiveRecord::Migrator.get_all_versions
     end
+
     # def validate_file_name!
     #   unless file_name =~ /^[_a-z0-9]+$/
     #     fail IllegalMigrationNameError, file_name

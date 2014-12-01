@@ -21,10 +21,9 @@ module Schemaless
 
       def change
         return [] unless current
-        @change ||= \
-        (proposed - add - remove).select do |f|
-          other = current.select { |c| c.name == f.name }.first
-          f.opts.select { |k, v| opts.opts[k] != v }.any? # != other.opts
+        @change ||= proposed.select do |field|
+          next unless (other = current.select { |c| c.name == field.name }.first)
+          field.opts.select { |k, v| other.opts[k] != v }.any? # != other.opts
         end
       end
 
@@ -53,7 +52,7 @@ module Schemaless
       add_table! unless exists?
       # Order matter here
       (indexes.change + fields.change).each { |f| f.change!(self) }
-      (indexes.remove + fields.remove).each { |f| f.del!(self) }
+      (indexes.remove + fields.remove).each { |f| f.remove!(self) }
       (fields.add + indexes.add).each { |f| f.add!(self) }
     end
 
