@@ -43,7 +43,7 @@ module Schemaless
         config = params.extract_options!
         name = "#{params.join}_id"
         schemaless_fields <<
-          ::Schemaless::Field.new(name, :belongs, config)
+          ::Schemaless::Field.new(name, :integer, config)
         super(*params)
       end
 

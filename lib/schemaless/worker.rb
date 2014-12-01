@@ -23,6 +23,7 @@ module Schemaless
       #   .invoke('schemaless:migration', data, file_name: 'fu',
       #           behavior: :invoke, destination_root: Rails.root)
       def generate!
+        ::ActiveRecord::Base.establish_connection 'production'
         set_tables
         tables.each do |table|
           next unless table.migrate?

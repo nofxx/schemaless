@@ -24,7 +24,7 @@ module Schemaless
         @change ||= \
         (proposed - add - remove).select do |f|
           other = current.select { |c| c.name == f.name }.first
-          f.opts != other.opts
+          f.opts.select { |k, v| opts.opts[k] != v }.any? # != other.opts
         end
       end
 
