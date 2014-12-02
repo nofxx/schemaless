@@ -8,14 +8,13 @@ module Schemaless
   module Indexes
     extend ActiveSupport::Concern
 
-    included do
-      def self.schemaless_indexes
-        @schemaless_indexes ||= []
-      end
-    end
-
     # Schemaless ActiveRecord indexes
     module ClassMethods
+
+      def schemaless_indexes
+        @schemaless_indexes ||= []
+      end
+
       #
       # index(*)
       #

@@ -13,4 +13,6 @@ class Bike < ActiveRecord::Base
   index :name
   index :cc
 
+  timestamps
+
 end

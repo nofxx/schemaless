@@ -14,6 +14,11 @@ describe 'Schemaless' do
     expect(Bike.current_attributes.first).to be_a(::Schemaless::Field)
   end
 
+  it 'should have a helper for timestamps' do
+    expect(Bike.schemaless_fields.map(&:name)).to include('created_at')
+    expect(Bike.schemaless_fields.map(&:name)).to include('updated_at')
+  end
+
   # it 'should get attribute type string' do
   #   expect(Bike.schemaless_fields[:attr_db]['name']).to eq(:string)
   # end

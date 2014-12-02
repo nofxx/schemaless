@@ -51,6 +51,7 @@ module Schemaless
     # Selects what needs to be done for fields.
     #
     def run!
+      puts "+-+-+ Schemaless #{self}"
       add_table! unless exists?
       # Order matter here
       (indexes.change + fields.change).each { |f| f.change!(self) }

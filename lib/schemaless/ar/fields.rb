@@ -7,15 +7,15 @@ module Schemaless
   #
   module Fields
     extend ActiveSupport::Concern
-    included do
-      def self.schemaless_fields
-        @schemaless_fields ||= []
-      end
-    end
 
     # Schemaless ActiveRecord fields
     module ClassMethods
       AR_OPTS = ::Schemaless::Field::VALID_OPTS - [:index, :type]
+
+      def schemaless_fields
+        @schemaless_fields ||= []
+      end
+
       #
       # field(*)
       #
@@ -45,6 +45,18 @@ module Schemaless
         schemaless_fields <<
           ::Schemaless::Field.new(name, :integer, config)
         super(*params)
+      end
+
+      #
+      # Helper for timestamps
+      #
+      def timestamps(*params)
+        config = params.extract_options!
+        type = config[:type] || :timestamp
+        schemaless_fields << ::Schemaless::Field.new(:created_at, type, null: false)
+        schemaless_fields << ::Schemaless::Field.new(:updated_at, type, null: true)
+        return unless config[:paranoid]
+        schemaless_fields << ::Schemaless::Field.new(:deleted_at, type, null: true)
       end
 
       #
