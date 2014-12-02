@@ -3,16 +3,24 @@ require 'rails/generators/migration'
 
 module Schemaless
   # Generates migrations for schemaless safe mode
-  class MigrationGenerator < Rails::Generators::Base
+  class MigrationsGenerator < Rails::Generators::Base
     include Rails::Generators::Migration
     source_root File.expand_path('../templates', __FILE__)
-    argument :attributes, type: :array # , default: [] # , banner: 'path'
+    argument :models, type: :array, default: [] # , banner: 'path'
     desc 'Schemaless migration files generator!'
 
-    def create_migration_file
-      set_local_assigns!
-      # validate_file_name!
-      migration_template @migration_template, "db/migrate/#{file_name}.rb"
+    def create_migration_files
+      Rails.application.eager_load!
+      all_tables = Schemaless::Worker.all_tables
+      if models.empty?
+        tables = all_tables
+      else
+        tables = all_tables.select { |t| models.include?(t.model.to_s.downcase) }
+      end
+      tables.each do |table|
+        puts "Generating migrations for #{table}"
+        create_migration_for table
+      end
     end
 
     protected
@@ -39,13 +47,14 @@ module Schemaless
       @file_name = build_file_name.flatten.join('_')
     end
 
-    def set_local_assigns!
-      @table   = attributes.first
+    def create_migration_for table
+      @table   = table
       @fields  = @table.fields
       @indexes = @table.indexes
+      @table_name = @table.name
 
-      @migration_template = 'change_table.rb'
-      @table_name         = @table.name
+      template = file_name =~ /^create_(.+)/ ? 'create' : 'change'
+      migration_template "#{template}_table.rb", "db/migrate/#{file_name}.rb"
 
       # case file_name
       # when /join_table/
@@ -59,8 +68,6 @@ module Schemaless
 
       #     set_index_names
       #   end
-
-      @migration_template = 'create_table.rb' if file_name =~ /^create_(.+)/
     end
 
     def set_index_names

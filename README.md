@@ -80,7 +80,7 @@ as your test suite is using them.
 
 Schemaphobia? Very dangerous idea?
 
-    rake schemaless:up
+    rake schemaless:run
 
 Here we don't use any migration **as files**.
 On the production servers a rake task ensures everything is up to date.
