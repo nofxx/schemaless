@@ -8,6 +8,7 @@ module Schemaless
     def create_config_file
       application 'end'
       application '  Schemaless::Worker.run!'
+      application '  Rails.application.eager_load!'
       application 'config.to_prepare do'
       # initializer | application
       # copy 'schemaless.rb'
