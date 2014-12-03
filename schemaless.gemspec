@@ -8,9 +8,9 @@ Gem::Specification.new do |s|
   s.version     = Schemaless::VERSION
 
   s.authors     = ['Marcos Piccinini']
-  s.description = 'ActiveRecord field!'
+  s.description = 'ActiveRecord field & index!'
   s.homepage    = 'http://github.com/nofxx/schemaless'
-  s.summary     = 'Object enums with i18n in AR or Mongoid'
+  s.summary     = 'Schemaless dynamic attributes for ActiveRecord'
   s.email       = 'x@nofxx.com'
   s.license     = 'MIT'
 

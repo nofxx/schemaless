@@ -23,7 +23,7 @@ module Schemaless
         return [] unless current
         @change ||= proposed.select do |field|
           next unless (other = current.select { |c| c.name == field.name }.first)
-          field.opts.select { |k, v| other.opts[k] != v }.any? # != other.opts
+          field.opts == other.opts # .select { |k, v| other.opts[k] != v }.any? # != other.opts
         end
       end
 

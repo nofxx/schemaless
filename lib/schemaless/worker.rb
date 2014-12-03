@@ -5,7 +5,6 @@ module Schemaless
   module Worker
     # Module class methods
     class << self
-
       #
       # Run Schemaless live mode
       #
@@ -22,10 +21,7 @@ module Schemaless
       #           behavior: :invoke, destination_root: Rails.root)
       def generate!
         ::ActiveRecord::Base.establish_connection 'production'
-        all_tables.each do |table|
-          next unless table.migrate?
-          Schemaless::MigrationGenerator.new([table]).invoke_all
-        end
+        Schemaless::MigrationsGenerator.new(all_tables).invoke_all
       end
 
       #
@@ -34,7 +30,7 @@ module Schemaless
       def all_tables # (models)
         tables = []
         models = ::ActiveRecord::Base.descendants
-        #fail 'No models...eager load off?' if models.empty?
+        # fail 'No models...eager load off?' if models.empty?
         models.each do |model|
           next if model.to_s =~ /ActiveRecord::/
           model.reset_column_information

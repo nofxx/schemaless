@@ -10,7 +10,9 @@ module Schemaless
 
     # Schemaless ActiveRecord indexes
     module ClassMethods
-
+      #
+      # Holder for all fields dynamic
+      #
       def schemaless_indexes
         @schemaless_indexes ||= []
       end

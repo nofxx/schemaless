@@ -11,7 +11,7 @@ module Schemaless
 
     def create_migration_files
       Rails.application.eager_load!
-      all_tables = Schemaless::Worker.all_tables
+      all_tables = Schemaless::Worker.all_tables.select(&:migrate?)
       if models.empty?
         tables = all_tables
       else
@@ -47,7 +47,7 @@ module Schemaless
       @file_name = build_file_name.flatten.join('_')
     end
 
-    def create_migration_for table
+    def create_migration_for(table)
       @table   = table
       @fields  = @table.fields
       @indexes = @table.indexes
