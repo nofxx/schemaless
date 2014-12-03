@@ -44,7 +44,11 @@ No code executed in production mode.
 
 # How?
 
-Just include the gem and run:
+Just include the gem:
+
+    gem 'schemaless'
+
+And on your app:
 
     rails g schemaless:setup
 
