@@ -1,7 +1,7 @@
 Schemaless
 ==========
 
-**On ActiveRecord | PostgreSQL**
+## For ActiveRecord / PostgreSQL
 
 **Experimental, bugged code**, please use to submit bugs/requests.
 Needs more test code and scenarios also.
